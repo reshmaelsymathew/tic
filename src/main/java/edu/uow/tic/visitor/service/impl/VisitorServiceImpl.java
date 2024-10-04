@@ -30,10 +30,10 @@ public class VisitorServiceImpl implements VisitorService {
 
     @Override
     public Visitor createVisitorInformation(Visitor visitorInformation) {
-        logger.info("Creating visitor information for: {}", visitorInformation.getVisitorName());
+        logger.info("[TIC] Creating visitor information for: {}", visitorInformation.getVisitorName());
         try {
             Visitor savedVisitor = visitorRepository.save(visitorInformation);
-            logger.info("Visitor information created successfully with ID: {}", savedVisitor.getId());
+            logger.info("[TIC] Visitor information created successfully with ID: {}", savedVisitor.getId());
             
             // Log the event after successful creation
             eventLogService.saveEventLog(savedVisitor.getId(), savedVisitor.getVisitorName(), 
@@ -41,7 +41,7 @@ public class VisitorServiceImpl implements VisitorService {
             
             return savedVisitor;
         } catch (Exception e) {
-            logger.error("Error occurred while creating visitor information", e);
+            logger.error("[TIC] Error occurred while creating visitor information", e);
             // Log the event in case of failure
             eventLogService.saveEventLog(null, visitorInformation.getVisitorName(), 
                 ActionType.CREATE, Action.VISITOR_INFORMATION_CREATE, Status.ERROR);
@@ -51,9 +51,9 @@ public class VisitorServiceImpl implements VisitorService {
 
     @Override
     public List<Visitor> getAllVisitorInformation() {
-        logger.info("Fetching all visitor information.");
+        logger.info("[TIC] Fetching all visitor information.");
         List<Visitor> visitors = visitorRepository.findAll();
-        logger.info("Successfully retrieved {} visitor records.", visitors.size());
+        logger.info("[TIC] Successfully retrieved {} visitor records.", visitors.size());
         
         // Log the event after fetching all visitor information
         eventLogService.saveEventLog(1L, "admin", ActionType.GET_ALL, 
@@ -64,16 +64,16 @@ public class VisitorServiceImpl implements VisitorService {
 
     @Override
     public Optional<Visitor> getVisitorInformationById(Long id) {
-        logger.info("Fetching visitor information by ID: {}", id);
+        logger.info("[TIC] Fetching visitor information by ID: {}", id);
         Optional<Visitor> visitor = visitorRepository.findById(id);
 
         if (visitor.isPresent()) {
-            logger.info("Visitor information found for ID: {}", id);
+            logger.info("[TIC] Visitor information found for ID: {}", id);
             // Log success
             eventLogService.saveEventLog(visitor.get().getId(), visitor.get().getVisitorName(), 
                 ActionType.GET_BY_ID, Action.VISITOR_INFORMATION_GET_BY_ID, Status.SUCCESS);
         } else {
-            logger.warn("No visitor information found for ID: {}", id);
+            logger.warn("[TIC] No visitor information found for ID: {}", id);
             // Log failure
             eventLogService.saveEventLog(id, "Unknown", ActionType.GET_BY_ID, 
                 Action.VISITOR_INFORMATION_GET_BY_ID, Status.ERROR);
@@ -83,7 +83,7 @@ public class VisitorServiceImpl implements VisitorService {
 
     @Override
     public Visitor updateVisitorInformation(Long id, Visitor visitorInformation) {
-        logger.info("Updating visitor information for ID: {}", id);
+        logger.info("[TIC] Updating visitor information for ID: {}", id);
         Optional<Visitor> existingVisitorInfo = visitorRepository.findById(id);
 
         if (existingVisitorInfo.isPresent()) {
@@ -97,7 +97,7 @@ public class VisitorServiceImpl implements VisitorService {
             updateVisitorInfo.setVisitDate(visitorInformation.getVisitDate());
             
             Visitor savedVisitor = visitorRepository.save(updateVisitorInfo);
-            logger.info("Visitor information updated successfully for ID: {}", id);
+            logger.info("[TIC] Visitor information updated successfully for ID: {}", id);
             
             // Log the event after successful update
             eventLogService.saveEventLog(savedVisitor.getId(), savedVisitor.getVisitorName(), 
@@ -105,7 +105,7 @@ public class VisitorServiceImpl implements VisitorService {
             
             return savedVisitor;
         } else {
-            logger.warn("No visitor information found for update, ID: {}", id);
+            logger.warn("[TIC] No visitor information found for update, ID: {}", id);
             // Log the event if the update fails
             eventLogService.saveEventLog(id, "Unknown", ActionType.UPDATE, 
                 Action.VISITOR_INFORMATION_UPDATE, Status.ERROR);
@@ -115,16 +115,16 @@ public class VisitorServiceImpl implements VisitorService {
 
     @Override
     public void deleteVisitorInformation(Long id) {
-        logger.info("Deleting visitor information for ID: {}", id);
+        logger.info("[TIC] Deleting visitor information for ID: {}", id);
         try {
             visitorRepository.deleteById(id);
-            logger.info("Visitor information deleted successfully for ID: {}", id);
+            logger.info("[TIC] Visitor information deleted successfully for ID: {}", id);
             
             // Log successful delete
             eventLogService.saveEventLog(id, "admin", ActionType.DELETE, 
                 Action.VISITOR_INFORMATION_DELETE, Status.SUCCESS);
         } catch (Exception e) {
-            logger.error("Error occurred while deleting visitor information for ID: {}", id, e);
+            logger.error("[TIC] Error occurred while deleting visitor information for ID: {}", id, e);
             // Log failure in delete
             eventLogService.saveEventLog(id, "admin", ActionType.DELETE, 
                 Action.VISITOR_INFORMATION_DELETE, Status.ERROR);
