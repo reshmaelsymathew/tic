@@ -14,7 +14,6 @@ import edu.uow.tic.visitor.service.VisitorService;
 
 @RestController
 @RequestMapping("/api/visitorinformation")
-//@CrossOrigin(origins = "http://localhost:5173")
 public class VisitorController {
 
     // Initialize the logger
